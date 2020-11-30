@@ -1,0 +1,29 @@
+name: Build hiwifi-hc6361 19.07.4
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+  
+      - name: install software
+        run: |
+          sudo apt-get install -y xz-utils libncurses5-dev gawk libz-dev git build-essential libncurses5-dev zlib1g-dev gawk git libssl-dev wget unzip python ocaml-nox help2man texinfo yui-compressor python3
+
+      - name: Download imagebuilder sdk
+        run: |
+          wget https://downloads.openwrt.org/releases/19.07.4/targets/ar71xx/generic/openwrt-imagebuilder-19.07.4-ar71xx-generic.Linux-x86_64.tar.xz
+          tar -xvJf openwrt-imagebuilder-19.07.4-ar71xx-generic.Linux-x86_64.tar.xz
+      
+      - name: build diy sysupgrade.bin
+        run: |
+          cd openwrt-imagebuilder-19.07.4-ar71xx-generic.Linux-x86_64
+          make image PROFILE=hiwifi-hc6361 PACKAGES="luci luci-i18n-base-zh-cn" FILES=../hc6361_files/
+      
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2.1.4
+        with:
+          name: openwrt-19.07.4-ar71xx-generic-hiwifi-hc6361-squashfs-sysupgrade.bin
+          path: openwrt-imagebuilder-19.07.4-ar71xx-generic.Linux-x86_64/bin/targets/ar71xx/generic/openwrt-19.07.4-ar71xx-generic-hiwifi-hc6361-squashfs-sysupgrade.bin
+          
