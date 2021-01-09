@@ -1,4 +1,4 @@
-name: Build hiwifi-hc6361 19.07.4
+name: Build hiwifi-hc6361 19.07.5
 on:
   workflow_dispatch:
 jobs:
